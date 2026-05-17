@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict LqxFfi78NMoYmvtIcerqIqX38uXiIHfnwhdRzZSGIKMucJtV2f3OU5YOik1kM3v
+\restrict oCuOoQZblJ6kotOeYmPp55fBV2HShTPlbvPrnPSPCsdmN0cM9HWvf1GLoydFZx7
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
 
--- Started on 2026-05-04 23:39:34
+-- Started on 2026-05-17 16:22:08
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -35,7 +35,8 @@ CREATE TABLE public.messages (
     sender_id integer,
     receiver_id integer,
     content text NOT NULL,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    is_edited boolean DEFAULT false
 );
 
 
@@ -54,7 +55,7 @@ CREATE SEQUENCE public.messages_id_seq
 
 
 --
--- TOC entry 5042 (class 0 OID 0)
+-- TOC entry 5044 (class 0 OID 0)
 -- Dependencies: 221
 -- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -89,7 +90,7 @@ CREATE SEQUENCE public.user_contacts_id_seq
 
 
 --
--- TOC entry 5043 (class 0 OID 0)
+-- TOC entry 5045 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: user_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -110,7 +111,8 @@ CREATE TABLE public.users (
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     real_name character varying(100),
     phone character varying(20),
-    status character varying(20) DEFAULT 'offline'::character varying
+    status character varying(20) DEFAULT 'offline'::character varying,
+    role character varying(20) DEFAULT 'user'::character varying
 );
 
 
@@ -129,7 +131,7 @@ CREATE SEQUENCE public.users_id_seq
 
 
 --
--- TOC entry 5044 (class 0 OID 0)
+-- TOC entry 5046 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -138,7 +140,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- TOC entry 4869 (class 2604 OID 16409)
+-- TOC entry 4870 (class 2604 OID 16409)
 -- Name: messages id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -146,7 +148,7 @@ ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.mes
 
 
 --
--- TOC entry 4871 (class 2604 OID 16436)
+-- TOC entry 4873 (class 2604 OID 16436)
 -- Name: user_contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -162,7 +164,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- TOC entry 4881 (class 2606 OID 16416)
+-- TOC entry 4883 (class 2606 OID 16416)
 -- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -171,7 +173,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 4883 (class 2606 OID 16439)
+-- TOC entry 4885 (class 2606 OID 16439)
 -- Name: user_contacts user_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -180,7 +182,7 @@ ALTER TABLE ONLY public.user_contacts
 
 
 --
--- TOC entry 4885 (class 2606 OID 16441)
+-- TOC entry 4887 (class 2606 OID 16441)
 -- Name: user_contacts user_contacts_user_id_contact_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -189,7 +191,7 @@ ALTER TABLE ONLY public.user_contacts
 
 
 --
--- TOC entry 4873 (class 2606 OID 16404)
+-- TOC entry 4875 (class 2606 OID 16404)
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -198,7 +200,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4875 (class 2606 OID 16430)
+-- TOC entry 4877 (class 2606 OID 16430)
 -- Name: users users_phone_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -207,7 +209,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4877 (class 2606 OID 16400)
+-- TOC entry 4879 (class 2606 OID 16400)
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -216,7 +218,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4879 (class 2606 OID 16402)
+-- TOC entry 4881 (class 2606 OID 16402)
 -- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -225,7 +227,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 4886 (class 2606 OID 16422)
+-- TOC entry 4888 (class 2606 OID 16422)
 -- Name: messages messages_receiver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -234,7 +236,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 4887 (class 2606 OID 16417)
+-- TOC entry 4889 (class 2606 OID 16417)
 -- Name: messages messages_sender_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -243,7 +245,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- TOC entry 4888 (class 2606 OID 16447)
+-- TOC entry 4890 (class 2606 OID 16447)
 -- Name: user_contacts user_contacts_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -252,7 +254,7 @@ ALTER TABLE ONLY public.user_contacts
 
 
 --
--- TOC entry 4889 (class 2606 OID 16442)
+-- TOC entry 4891 (class 2606 OID 16442)
 -- Name: user_contacts user_contacts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -260,10 +262,11 @@ ALTER TABLE ONLY public.user_contacts
     ADD CONSTRAINT user_contacts_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
--- Completed on 2026-05-04 23:39:35
+-- Completed on 2026-05-17 16:22:10
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict LqxFfi78NMoYmvtIcerqIqX38uXiIHfnwhdRzZSGIKMucJtV2f3OU5YOik1kM3v
+\unrestrict oCuOoQZblJ6kotOeYmPp55fBV2HShTPlbvPrnPSPCsdmN0cM9HWvf1GLoydFZx7
+
